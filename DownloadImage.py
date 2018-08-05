@@ -4,7 +4,7 @@
 from concurrent import futures
 from hashlib import sha1
 from time import sleep
-import pickle
+import json
 import requests
 import os
 
@@ -46,7 +46,7 @@ def download(cid):
     url = url.format(generate_url(crypkos[cid]))
     name = 'Crypko #' + str(crypkos[cid]['id']) + '.jpg'
 
-    if os.path.exists(f'images/{n}/{name}'):
+    if os.path.exists('images/{}/{}'.format(n, name)):
         cnt += 1
         return
 
@@ -63,28 +63,31 @@ def download(cid):
                 raise Exception('Not JPG')
 
             cnt += 1
-            print(f'[{n}][{cnt / 500 * 100:.2f}%]Download #{crypkos[cid]["id"]}')
-            with open(f'images/{n}/{name}', 'wb') as f:
+            print('[{}][{:.2f}%]Download #{}'.format(n, cnt / 500 * 100, crypkos[cid]["id"]))
+            with open('images/{}/{}'.format(n, name), 'wb') as f:
                 f.write(res)
             break
         except Exception as e:
             print(e)
-            print(f'failed to download #{crypkos[cid]["id"]}, asking for new proxy')
+            print('failed to download #{}, asking for new proxy'.format(crypkos[cid]["id"]))
             # requests.get('http://xxxx/delete?proxy=' + proxy)
 
-if len(os.listdir('./images')) != 0:
+if not os.path.exists('./images'):
+    os.mkdir('./images')
+
+try:
     i = max(int(i) for i in os.listdir('./images') if i.isdigit())
-else:
+except ValueError:
     i = 0
 # get_proxy() # 初始化代理
 while True:
 
-    if not os.path.exists(f'./images/{i}'):
-        os.mkdir(f'./images/{i}')
+    if not os.path.exists('./images/{}'.format(i)):
+        os.mkdir('./images/{}'.format(i))
     n = i
 
-    with open(f'./new_data/{i}', 'rb') as f:
-        crypkos = pickle.load(f)
+    with open('./new_data/{}'.format(i), 'r') as f:
+        crypkos = json.load(f)
 
     cnt = 0
     with futures.ThreadPoolExecutor(max_workers=25) as executor:
@@ -93,11 +96,11 @@ while True:
         for _ in tasks:
             pass
 
-    if not os.path.exists(f'./new_data/{i + 1}'):
-        print(f'no new cards, sleeping for 60s')
+    if not os.path.exists('./new_data/{}'.format(i + 1)):
+        print('no new cards, sleeping for 60s')
         sleep(60)
         continue
     else:
-        print(f'finish, sleeping for 5s...')
+        print('finish, sleeping for 5s...')
         sleep(5)
         i += 1

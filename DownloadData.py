@@ -4,7 +4,7 @@
 from concurrent import futures
 from time import sleep
 import os
-import pickle
+import json
 import requests
 
 api = 'https://api.crypko.ai/crypkos/{}/detail'
@@ -45,17 +45,20 @@ def get_detail(cid):
             cnt += 1
 
             if 'MAX_CNT' in globals():
-                print(f'[{cnt / MAX_CNT * 100:.2f}%][{n} / {MAX_CNT}] Download #{cid}')
+                print('[{:.2f}%][{} / {}] Download #{}'.format(cnt / MAX_CNT * 100, n, MAX_CNT, cid))
 
             return res.json()
         except Exception as e:
             print(e, res)
-            print(f'failed to download #{cid}, asking for new proxy')
+            print('failed to download #{}, asking for new proxy'.format(cid))
             # requests.get('http://xxxx/delete?proxy=' + proxy)
 
-if len(os.listdir('./new_data')) != 0:
+if not os.path.exists('./new_data'):
+    os.mkdir('./new_data')
+
+try:
     MIN_CNT = 500 * (max(int(i) for i in os.listdir('./new_data') if i.isdigit()) + 1)
-else:
+except ValueError:
     MIN_CNT = 0
 cnt = n = MIN_CNT
 INTERVAL = 500
@@ -81,12 +84,12 @@ while True:
             data.append(ret)
             n += 1
 
-    print(f"write new_data/{MIN_CNT // INTERVAL}")
-    with open(f'new_data/{MIN_CNT // INTERVAL}', 'wb') as f:
-        pickle.dump(data, f)
+    print("write new_data/{}".format(MIN_CNT // INTERVAL))
+    with open('new_data/{}'.format(MIN_CNT // INTERVAL), 'w') as f:
+        json.dump(data, f, indent=1)
 
     MIN_CNT = MAX_CNT
     cnt = n = MIN_CNT
 
-    print(f'finish, sleeping for 60s...')
+    print('finish, sleeping for 60s...')
     sleep(60)

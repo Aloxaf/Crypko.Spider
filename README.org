@@ -9,3 +9,8 @@
   用法:
   + =python DownloadData.py= 爬取数据, 每500个一组, 用pickle序列化之后进行存储, 是爬取图片的前提
   + =python DownloadImage.py= 爬取图片, 每500个一组, 直接存储
+
+  Note:
+  + 第一次请让DownloadData先运行一段时间后再开启DownloadImage
+  + 不要在images和new_data文件夹下放其他东西, 会引起对当前进度的误判
+  
