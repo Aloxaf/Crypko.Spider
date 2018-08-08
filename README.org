@@ -7,7 +7,7 @@
 
 
   用法:
-  + =python DownloadData.py= 爬取数据, 每500个一组, 用pickle序列化之后进行存储, 是爬取图片的前提
+  + =python DownloadData.py= 爬取数据, 每500个一组, 用JSON格式进行存储, 是爬取图片的前提
   + =python DownloadImage.py= 爬取图片, 每500个一组, 直接存储
   + =python DownloadWaifu.py 钱包地址= 下载指定地址的Crypko大图
 
