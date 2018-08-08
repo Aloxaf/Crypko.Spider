@@ -60,7 +60,7 @@ def main(owner_addr):
     with futures.ThreadPoolExecutor(max_workers=25) as executor:
         tasks = executor.map(download, crypkos)
         for name, content in tasks:
-            print('\r[{: 02.2f}%] 下载中: {}'.format(cnt / total, name), end='')
+            print('\r[{:02.2f}%] 下载中: {}'.format(cnt / total * 100, name), end='')
             with open('./{}/{}'.format(owner_addr, name), 'wb') as f:
                 f.write(content)
             cnt += 1
