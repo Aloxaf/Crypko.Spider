@@ -67,7 +67,7 @@ def main(owner_addr, thread):
 
 if __name__ == '__main__':
     if len(argv) == 1:
-        print('{} your_wallet_address [num_of_thread(default 20)]')
+        print('{} your_wallet_address [num_of_thread(default 20)]'.format(argv[0]))
     else:
         if not path.exists(argv[1]):
             mkdir(argv[1])
