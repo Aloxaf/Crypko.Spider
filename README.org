@@ -3,7 +3,9 @@
 
   原计划是一次性脚本, 所以结构简单粗暴, 遵循着能用就行的原则进行设计.
 
-  上传的版本去掉了代理部分, 想开一堆线程爬的朋友请自行加上.
+  考虑到公测已经结束, 而且自己也爬完了, 就放出来造(d)福(d)社(o)会(s). (反正官方新版一定会换算法的对吧.)
+
+  上传的版本去掉了代理部分, 想开一堆线程一天爬完的朋友请自行加上.
 
 
   用法:
@@ -11,6 +13,18 @@
   + =python DownloadImage.py= 爬取图片, 每500个一组, 直接存储
   + =python DownloadWaifu.py 钱包地址= 下载指定地址的Crypko大图
 
-  Note:
+  注意事项:
   + 第一次请让DownloadData先运行一段时间后再开启DownloadImage
   + 不要在images和new_data文件夹下放其他东西, 会引起对当前进度的误判
+
+* Crypko.Spider
+  A very very ungly spider...
+
+  Usage:
+  + =python DownloadData.py= download crypkos' data, stored as json
+  + =python DownloadImage.py= download images, need data downloaded by DownloadData.py
+  + =python DownloadWaifu.py wallet_address= download crypkos of specific address
+
+  Note:
+  + Please make sure you have run DownloadData before run DownloadImage
+  + Don't put any other files in foler "images" and "new_data"

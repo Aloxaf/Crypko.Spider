@@ -36,18 +36,17 @@ def get_page(owner_addr, page):
 
 def download(crypko):
     base = 'https://img.crypko.ai/daisy/{}_lg.jpg'
-
     url = base.format(generate_url(crypko))
-    name = '{}.jpg'.format(crypko.get('name', '# ' + str(crypko['id'])))
+    name = '{}.jpg'.format(crypko.get('name', '#' + str(crypko['id'])))
     return [name, requests.get(url).content]
 
-def main(owner_addr):
+def main(owner_addr, thread):
     page, cnt, crypkos = 1, 1, []
-    print('获取Crypko列表中...')
+    print('Getting Crypko list...')
 
-    # TODO: 这个地方也可以多线程, 然而懒
+    # TODO: multithread
     while True:
-        print('\r第{}页'.format(page), end='')
+        print('\rpage {}'.format(page), end='')
         tmp = get_page(owner_addr, page)
         total = tmp['totalMatched']
         crypkos.extend(tmp['crypkos'])
@@ -56,19 +55,20 @@ def main(owner_addr):
             break
         page += 1
 
-    print('开始下载...')
-    with futures.ThreadPoolExecutor(max_workers=25) as executor:
+    print('downloading...')
+    with futures.ThreadPoolExecutor(max_workers=thread) as executor:
         tasks = executor.map(download, crypkos)
         for name, content in tasks:
-            print('\r[{:02.2f}%] 下载中: {}'.format(cnt / total * 100, name), end='')
+            print('\r[{:02.2f}%] downloading: {}'.format(cnt / total * 100, name), end='')
             with open('./{}/{}'.format(owner_addr, name), 'wb') as f:
                 f.write(content)
             cnt += 1
+    print('finished!')
 
 if __name__ == '__main__':
-    if len(argv) != 2:
-        print('{} your_wallet_address')
+    if len(argv) == 1:
+        print('{} your_wallet_address [num_of_thread(default 20)]')
     else:
         if not path.exists(argv[1]):
             mkdir(argv[1])
-        main(argv[1])
+        main(argv[1], int(argv[2]) if len(argv) == 3 else 20)
