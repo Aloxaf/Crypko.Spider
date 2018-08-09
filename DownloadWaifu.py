@@ -4,6 +4,7 @@ from hashlib import sha1
 from sys import argv
 from concurrent import futures
 from os import path, mkdir
+import re
 
 import requests
 
@@ -37,7 +38,8 @@ def get_page(owner_addr, page):
 def download(crypko):
     base = 'https://img.crypko.ai/daisy/{}_lg.jpg'
     url = base.format(generate_url(crypko))
-    name = '{}.jpg'.format('#' + str(crypko['id']) + crypko.get('name', ''))
+    name = '#{} {}.jpg'.format(crypko['id'], crypko.get('name', ''))
+    name = re.sub(r'[/\:*?"<>|\t]', '', name).strip()
     return [name, requests.get(url).content]
 
 def main(owner_addr, thread):
