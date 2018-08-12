@@ -38,8 +38,8 @@ def get_page(owner_addr, page):
 def download(crypko):
     base = 'https://img.crypko.ai/daisy/{}_lg.jpg'
     url = base.format(generate_url(crypko))
-    name = '#{} {}.jpg'.format(crypko['id'], crypko.get('name', ''))
-    name = re.sub(r'[/\:*?"<>|\t]', '', name).strip()
+    name = '#{} {}'.format(crypko['id'], crypko.get('name', ''))
+    name = re.sub(r'[/\:*?"<>|\t]', '', name).strip() + '.jpg'
     return [name, requests.get(url).content]
 
 def main(owner_addr, thread):
