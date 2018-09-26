@@ -18,7 +18,7 @@
   + 不要在images和new_data文件夹下放其他东西, 会引起对当前进度的误判
 
 * Crypko.Spider
-  A very very ungly spider...
+  A very very ugly spider...
 
   Usage:
   + =python DownloadData.py= download crypkos' data, stored as json
